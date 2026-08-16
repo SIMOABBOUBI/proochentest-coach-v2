@@ -1,67 +1,114 @@
-# Sproochentest — Coach A2
+# Sproochentest — Coach A2 · v4
 
-Coach d'entraînement à l'oral du Sproochentest luxembourgeois (A2), en PWA
-100 % statique (HTML/CSS/JS, aucune dépendance, aucun backend).
+Entraînement à **l'oral du Sproochentest luxembourgeois**. Application web, sans
+serveur, sans compte, sans requête réseau après le chargement : tout reste dans
+le navigateur de l'appareil.
 
-⚠️ **Outil privé et indépendant**, non affilié à l'INLL ni aux
-administrations luxembourgeoises. Il ne garantit aucun résultat officiel.
+## ⚠️ À faire avant la première utilisation
 
-## Contenu
-- 42 questions d'expression orale, réparties sur les 10 thèmes officiels
-  (présentation, famille, travail, logement, transports, loisirs, santé,
-  nourriture, Luxembourg, projets) — voir `corpus.js`.
-- Méthode de réponse en 3 temps : **Äntwert · Grond · Beispill**
-  (réponse · justification · vocabulaire) — voir `method.js`.
-- 5 exercices de compréhension orale avec synthèse vocale du navigateur
-  (approximative : aucun navigateur n'a de voix luxembourgeoise fiable) —
-  voir `listen.js`.
-- 27 vraies photos à décrire (dossier `/photos`) — voir `corpus.js`.
-  ⚠️ Les titres affichés sont des placeholders génériques
-  ("Foto 1"…"Foto 27") : je n'ai pas voulu inventer de légendes précises
-  sans certitude sur chaque scène. Corrige-les directement dans
-  `corpus.js` (`title`, `fr`, `vocab`), un objet par photo — c'est la
-  correction la plus rapide à fort impact.
-- Suivi de progression (série de jours, XP, score par thème) en
-  `localStorage`, rien n'est envoyé à un serveur.
-- PWA installable, fonctionne hors-ligne après la première visite
-  (`sw.js` + `manifest.webmanifest`).
+Ce dépôt contient tout le code (`index.html`, `app.js`, `method.js`, `listen.js`,
+`pwa.js`, `sw.js`) prêt à l'emploi. Deux choses restent à compléter :
 
-## Lancer en local
-Aucune compilation nécessaire. Il faut juste servir les fichiers via http
-(le fetch du manifest et le service worker ne marchent pas en `file://`) :
+1. **`corpus.js`** — ce fichier contient actuellement un corpus **réduit**
+   (quelques questions d'exemple), pas les 278 questions et 27 photos
+   d'origine. Remplace son contenu par le JSON complet issu de ton document
+   source (`Topics - Froen an äntwerten`), en conservant exactement la
+   structure `window.CORPUS = {"themes": [...], "froen": [...], "photos": [...],
+   "vocab": [...]};`. Vérifie la syntaxe avant de committer :
+   ```bash
+   node --check corpus.js
+   ```
+2. **`photos/`** — le dossier existe mais est vide. Dépose-y les 27 photos
+   (`a.jpg` à `aa.jpg`, comme référencé dans le champ `img` de chaque entrée
+   de `CORPUS.photos`) et les icônes de ton choix dans `icons/` (des icônes
+   de secours y sont déjà présentes).
+
+## Ce que l'app propose
+
+L'application est construite autour d'une seule idée : **l'examen, c'est une
+question et ta bouche**. Tout est indexé sur une question d'examen à laquelle
+il faut savoir répondre tout de suite.
+
+### Les deux épreuves
+
+| | niveau | durée | contenu |
+|---|---|---|---|
+| **Héiverstoen** | **B1** | 35 min | 3 documents — un message radio, une conversation du quotidien, un échange ou une présentation. Un questionnaire à cocher par document, chacun passé deux fois. |
+| **Mëndlechen Ausdrock** | A2 | 10 min | 5 min d'entretien (au choix parmi 2 sujets) + 5 min de description (au choix parmi 3 supports). |
+
+Il faut au moins la moitié des points à l'oral ; une note inférieure peut être
+compensée par l'écoute si la moyenne des deux atteint 50 %.
+
+### La règle d'or
+
+`Äntwert · Grond · Beispill` — réponse, raison, exemple. Une réponse d'un mot
+fait perdre des points même juste.
+
+### Tes réponses, pas celles du document
+
+Les questions viennent avec une réponse modèle. Elle sert d'**ossature**.
+L'application te fait écrire ta propre version, la garde, et c'est **la
+tienne** qu'elle te fait réviser et redire à voix haute.
+
+### La session du soir
+
+Elle **n'apprend rien de neuf** : bilan de la journée, repêchage des erreurs,
+trois réponses dites à voix haute, cinq cartes de demain, une photo en tête,
+puis clôture. À partir de l'heure choisie (20 h par défaut), l'application
+entière bascule dans un régime visuel et sonore différent (lumière chaude,
+sons coupés, rythme ralenti).
+
+## Fichiers
+
+| | |
+|---|---|
+| `index.html` | coquille, styles, jeu d'icônes SVG |
+| `app.js` | moteur : révision espacée, sessions, écrans |
+| `method.js` | couche pédagogique (règle d'or, 7 types de questions, grammaire, méthode photo) |
+| `listen.js` | 9 documents de compréhension orale (B1), écrits à la main |
+| `corpus.js` | données du document source — **généré**, à compléter (voir ci-dessus) |
+| `photos/` | photos référencées par `corpus.js` — à déposer |
+| `icons/` | icônes PWA — icônes de secours incluses |
+| `sw.js`, `pwa.js` | hors-ligne, installation, mises à jour |
+| `manifest.webmanifest` | métadonnées PWA |
+
+## Utilisation en local
+
+Double-cliquer sur `index.html` suffit — l'application se charge entièrement.
+Deux fonctions restent alors indisponibles, les navigateurs les réservant aux
+contextes sécurisés : l'enregistrement au micro et l'installation hors ligne.
+Pour les activer :
 
 ```bash
-cd sproochentest-coach
-python3 -m http.server 8000
-# puis ouvrir http://localhost:8000
+python3 -m http.server 8080
 ```
 
-ou avec Node : `npx serve .`
+puis ouvrir http://localhost:8080/. Depuis un téléphone sur le même Wi-Fi,
+remplacer `localhost` par l'adresse IP de l'ordinateur.
 
-## Déployer sur GitHub Pages (URL publique gratuite)
-```bash
-cd sproochentest-coach
-git init
-git add .
-git commit -m "Sproochentest Coach — première version"
-git branch -M main
-git remote add origin https://github.com/<ton-compte>/sproochentest-coach.git
-git push -u origin main
-```
-Puis sur GitHub : Settings → Pages → Source = "Deploy from a branch" →
-Branch = `main` / `root`. L'URL sera
-`https://<ton-compte>.github.io/sproochentest-coach/` (disponible après
-1-2 minutes, et à chaque nouveau `push`).
+## Hébergement sur GitHub Pages
 
-## Ce que j'étendrais en premier
-1. **Les légendes des 27 photos** : remplacer les titres génériques
-   "Foto N" dans `corpus.js` par de vrais titres luxembourgeois + 2-3 mots
-   de vocabulaire par photo.
-2. **Le corpus de questions** : passer de 42 à un ensemble plus large,
-   idéalement relu par un locuteur natif — c'est la priorité, le reste ne
-   vaut que ce que vaut le contenu.
-3. **De vrais enregistrements audio** pour l'écoute plutôt que la
-   synthèse vocale (dossier `/audio`, même `id` que dans `listen.js`) —
-   la synthèse actuelle aide pour le texte, pas pour l'oreille.
-4. **Un vrai enregistreur vocal** (MediaRecorder) pour se réécouter après
-   chaque réponse, au lieu du simple chronomètre actuel.
+1. Pousse ce dossier tel quel sur un dépôt GitHub (voir plus bas).
+2. Dans le dépôt : **Settings → Pages → Build and deployment → Source:
+   Deploy from a branch**, branche `main`, dossier `/ (root)`.
+3. L'app sera servie à `https://<utilisateur>.github.io/<nom-du-depot>/`.
+
+Aucun build, tous les chemins sont relatifs (`./corpus.js`, `./icons/...`) —
+ça fonctionne aussi bien à la racine d'un domaine que dans un sous-dossier
+`github.io/nom-du-depot/`.
+
+## Vie privée
+
+Aucun serveur, aucun compte, aucun traceur. Toute la progression — y compris
+tes réponses écrites — vit dans le `localStorage` du navigateur uniquement.
+L'écran *Progrès* permet de l'exporter et de la réimporter.
+
+## Compatibilité
+
+Chrome, Edge, Firefox et Safari récents, mobile et bureau. La synthèse vocale
+utilise la meilleure voix disponible : luxembourgeoise si le système en
+propose une, sinon allemande.
+
+## Licence du contenu
+
+Projet personnel d'entraînement, à but éducatif et non commercial.

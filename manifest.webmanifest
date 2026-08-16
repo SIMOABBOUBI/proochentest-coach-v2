@@ -1,7 +1,7 @@
 {
   "name": "Sproochentest — Coach A2",
   "short_name": "Sproochentest",
-  "description": "Coach d'entraînement à l'oral du Sproochentest luxembourgeois A2 : questions, écoute, photos et méthode en 3 temps.",
+  "description": "Coach d'entraînement à l'oral du Sproochentest luxembourgeois (A2) : questions d'examen, photos, méthode A·B·C·D, session du jour et session du soir.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
@@ -9,8 +9,12 @@
   "theme_color": "#EEF2F7",
   "lang": "fr",
   "icons": [
-    { "src": "./icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
-    { "src": "./icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
-    { "src": "./icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" }
+    { "src": "./icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "./icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "./icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Session du jour", "url": "./?go=dag" },
+    { "name": "Deux minutes", "url": "./?go=flash" }
   ]
 }
