@@ -464,9 +464,13 @@ function buildQueue(preset, arg) {
   }
 
   else if (preset === 'foto') {
-    const p = arg ? PHOTO_OF[arg] : pick(C.photos);
-    steps = p.p.map(b => ({ t: 'photoblk', p, b }));
-    steps.push({ t: 'photomind', p });
+      const p = arg ? PHOTO_OF[arg] : pick(C.photos);
+      if (!p) {
+        console.warn('foto: aucune photo trouvée pour arg=', arg, 'C.photos=', C.photos);
+        return [];
+      }
+      steps = p.p.map(b => ({ t: 'photoblk', p, b }));
+      steps.push({ t: 'photomind', p });
   }
 
   else if (preset === 'lauscht') {
